@@ -1,118 +1,131 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, {useState, useEffect} from 'react';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+// Import props
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
+    StyleSheet,
+    SafeAreaView,
+    View,
+    Text,
+    TextInput,
+    Button,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    // Initialize variables
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [loading, isLoading] = React.useState(false);
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    // Valid
+    const isUsernameValid = username.length >= 3;
+    const isPasswordValid = password.length >= 6;
+
+    const validLogin = isUsernameValid && isPasswordValid;
+
+    // User attempts to login
+    // No need to check here because 'validLogin' already checks valid login
+    const doLogin = () => {
+
+        // Ignore if logging in while loading
+        if (loading) return;
+
+        // Otherwise simulate load for 3 seconds
+        isLoading(true);
+        setTimeout(() => {
+            // After 3 seconds, set 'isLoading' back to false
+            isLoading(false);
+
+            // Opted against resetting fields here because it separates the issues
+            // setUsername('');
+            // setPassword('');
+        }, 3000);
+    }
+
+    // If loading state has been changed...
+    useEffect(() => {
+
+        // and is now set to false (meaning done loading), reset fields
+        if (!loading) {
+            setUsername('');
+            setPassword('');
+        }
+
+    }, [loading]);
+
+    return (
+        <SafeAreaView style={styles.background}>
+
+            {/* Email/Username box */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.inputBoxLabel}>Email or username</Text>
+                <TextInput
+                    style={styles.inputBox}
+                    onChangeText={setUsername}
+                    value={username}
+                    color="white"
+                    placeholder="Enter your username"
+                    placeholderTextColor="#777777"
+                />
+            </View>
+
+            {/* Password box */}
+            <View style={styles.inputContainer}>
+                <Text style={styles.inputBoxLabel}>Password</Text>
+                <TextInput
+                    style={styles.inputBox}
+                    onChangeText={setPassword}
+                    value={password}
+                    color="white"
+                    placeholder="Enter your username"
+                    placeholderTextColor="#777777"
+                />
+            </View>
+
+            {/* Login button */}
+            <View style={styles.buttonContainer}>
+                <Button
+                    color="purple"
+                    title={loading ? "Loading..." : "Login"}
+                    onPress={doLogin}
+                    disabled={!validLogin || loading}
+                />
+            </View>
+
+        </SafeAreaView>
+    );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+
+    background: {
+        flex: 1,
+        backgroundColor: '#111111',
+    },
+
+    inputContainer: {
+        padding: 0,
+        margin: 10,
+        marginHorizontal: 20,
+        backgroundColor: 'transparent',
+    },
+
+    inputBoxLabel: {
+        color: 'white',
+    },
+
+    inputBox: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#777777',
+        backgroundColor: 'transparent',
+        color: 'white',
+    },
+
+    buttonContainer: {
+        margin: 10,
+        padding: 10,
+    },
+
 });
 
 export default App;
