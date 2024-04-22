@@ -77,7 +77,7 @@ function App(): React.JSX.Element {
                     onChangeText={setPassword}
                     value={password}
                     color="white"
-                    placeholder="Enter your username"
+                    placeholder="Enter your password"
                     placeholderTextColor="#777777"
                 />
             </View>
